@@ -1,0 +1,43 @@
+Robert  Fitterman
+****!****
+Directory
+****!****
+
+Macy's                               Hickory Farms
+
+Circuit City                         GNC
+Payless ShoeSource                   The Body Shop
+Sears                                Eddie Bauer
+Kay Jewelers                         Payless ShoeSource
+GNC                                  Circuit City 
+LensCrafters                         Kay Jewelers
+Coach                                Gymboree
+H&M
+RadioShack
+Gymboree                             The Body Shop
+                                     Hickory Farms
+                                     Coach
+The Body Shop                        Macy's
+Eddie Bauer                          GNC
+Crabtree & Evelyn                    Circuit City
+Gymboree                             Sears
+Foot Locker
+Land's End
+GNC                                  H&M
+LensCrafters                         Kay Jewelers
+Coach                                Land's End
+Famous Footwear                      LensCrafters
+H&M                                  Eddie Bauer
+                                     Cinnabon
+                                     LensCrafters
+Foot Locker                          RadioShack
+GNC                                  GNC
+Macy's                               Sears
+Crabtree & Evelyn                    Crabtree & Evelyn
+H&M
+Cinnabon
+Kay Jewelers
+Lands's End
+
+
+~~~~!~~~
