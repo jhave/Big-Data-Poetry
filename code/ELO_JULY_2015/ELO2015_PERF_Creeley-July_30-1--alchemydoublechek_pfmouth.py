@@ -18,6 +18,9 @@ personal_pronouns = ["i","me","we","us","you","she","her","he","him","it","they"
 import time
 start_time = time.time()
 
+import uuid
+poem_id = uuid.uuid1()
+
 from pattern.en import verbs, conjugate, PARTICIPLE
 from pattern.en import parse
 from pattern.en import article, referenced
@@ -27,7 +30,7 @@ from pattern.en import article, referenced
 ################## WHEN TESTING CHANGE THIS ##########
 ######################################################
 
-type_of_run="ALL"
+type_of_run="All"
 
 poem_style ="Creeley-Style"
 
@@ -37,11 +40,11 @@ poem_style ="Creeley-Style"
 
 
 DATA_DIR  =  "../../data/poetryFoundation/"
+GENERATED_DIR  =  "../../generated/poetryFoundation/"
 
+READ_JSON_PATH = "../../json/ALCHEMY_POEMS_JSON_ALL/"
 
-READ_JSON_PATH = "../../json/ALCHEMY_POEMS_JSON_"+type_of_run+"/"
-
-READ_TXT_PATH = "txt_poems_ALL/"
+READ_TXT_PATH = "txt_poems_"+type_of_run+"/"
 
 READ_LIST_PATH = DATA_DIR+"NLTK_POS_LISTS_poetryFoundation_POEMs.txt"
 
@@ -82,9 +85,16 @@ science_data=open("../../generated/generic/science.txt").read()
 science_mouth=science_data.split(" ")
 science_mouth=list(set(science_mouth))
 
+poetry_data=open("../../generated/generic/2014-08-03_23_poetryFoundation_RESERVOIR_ALL.txt").read()
+poetry_mouth=poetry_data.split(" ")
+poetry_mouth=list(set(poetry_mouth))
 
-#print JJ
-print "Creeley-Style POEMS\n\nTechnical process: the following poems were produced using a 10,000+ corpus\nsent to Alchemy API to produce entity-recognition, POS, and sentiment reports.\nThat info influences replacement algorithms\nReplacement uses NLTK synsets and Pattern.en\nand a reservoir of words found in the corpus that do not have synonyms.\n\nAverage word-length is constrained so output reads like\nRobert Creeley becoming Samuel Beckett in Gertrude Stein's gut. \n\nLanguage: Python\nBlogged here: http://bdp.glia.ca/smaller-words-shrink-gapped\nModified for ELO performance, Bergen, Aug. 4th 2015\n"
+
+print "Creeley-Style POEMS\n\nTechnical process: the following poems were produced using a 10,000+ corpus\nsent to Alchemy API to produce entity-recognition, POS, and sentiment reports.\nThat info influences replacement algorithms\nReplacement uses NLTK synsets and Pattern.en\nand a reservoir of words found in the corpus that do not have synonyms.\n\nAverage word-length is constrained so output reads like\nRobert Creeley becoming Samuel Beckett in Gertrude Stein's gut. \n\nLanguage: Python\nBlogged here: http://bdp.glia.ca/smaller-words-shrink-gapped\nModified for ELO performance, Bergen, Aug. 4th 2015\nCode on github: https://github.com/jhave/Big-Data-Poetry"
+
+
+if type_of_run == "6":
+    print "\n###############################\nWARNING used limited test data\n###############################\n\n"
 
 
 # list of json files returned from Alchemy (without .DS_Store or system files)
@@ -118,15 +128,15 @@ relation_dict = {}
 
 filenames = []
 
-ALL_poems_intro = "<html xmlns='http://www.w3.org/1999/xhtml'><head>   <title>POEMs on BDP: Big-Data-Poetry</title><style type='text/css'>    body { margin: 40; padding: 20px; width: 85%; font: 14px Helvetica, Arial; }     table { border-collapse: collapse; }     form, td, p { margin: 20; padding: 0; } img { border: none; }  h4  { font: 18px ;}   a { color: #949494; text-decoration: none; } a:hover, .footer a { color: #2c2c2c; text-decoration: underline; }     a:focus { outline: none; }    .white { background: #fff; color: #000; } .black { background: #121212; color: #000; } .black a:hover, .black .footer a { color: #ddd; text-decoration: underline; } .header { padding: 70px 0 117px; position: relative;} .header, .footer { width: 750px; margin: 0 auto; } .body { width: 700px; margin: 20 auto; } .switcher { float: right; margin: 43px 0 0 0; cursor: pointer; } .switcher div { float: left; } .rss { float: right; margin-top: -53px;} </style> </head> <body class='white'> <table  width='70%' height='100%' border=0' align='center'> <tr><h1>$$cnt$$ <i>$$style$$</i> Poems</h1><h2>generated in $$gentime$$ seconds on $$datetime$$</h2>" 
+ALL_poems_intro = "<html xmlns='http://www.w3.org/1999/xhtml'><head>   <title>POEMs on BDP: Big-Data-Poetry</title><style type='text/css'>    body { margin: 40; padding: 20px; width: 85%; font: 14px Helvetica, Arial; }     table { border-collapse: collapse; }     form, td, p { margin: 20; padding: 0; } img { border: none; }  h4  { font: 18px ;}   a { color: #949494; text-decoration: none; } a:hover, .footer a { color: #2c2c2c; text-decoration: underline; }     a:focus { outline: none; }    .white { background: #fff; color: #000; } .black { background: #121212; color: #000; } .black a:hover, .black .footer a { color: #ddd; text-decoration: underline; } .header { padding: 70px 0 117px; position: relative;} .header, .footer { width: 750px; margin: 0 auto; } .body { width: 700px; margin: 20 auto; } .switcher { float: right; margin: 43px 0 0 0; cursor: pointer; } .switcher div { float: left; } .rss { float: right; margin-top: -53px;} </style> </head> <body class='white'> <table  width='70%' height='100%' border=0' align='center'> <tr><h1>$$cnt$$ <i>$$style$$</i> Poems</h1><h2>generated by <a href='http://bdp.glia.ca'/>bdp.glia.ca</a> in $$gentime$$ seconds on $$datetime$$</h2>" 
 ALL_poems=ALL_poems_intro
 bio=""
 
 num_of_files = 0
 cnt=0
 
-# preliminare weird seeds that expand to become the RESERVOIR
-prelim_weird_seed="uncompacted, selfhood, seeth, rainbow,lexical, haloing, butterflies, terracotta, fountaining, pigtails, wanna, unhoused, stripteasing, cramful, washpan, limekiln, pinpricks, prisoned, sphered, gingham, incestuous, flax, circulation, teapots, jugular, viperish, bulldog,  fingertips, hubcaps, cowlick, waterbed, maxed, chaliced, textual,  steamshovels, splint,, trophied,naw, highpoints,  pulsebeat, twerpy, foamline"
+# preliminare weird seeds
+prelim_weird_seed="uncompacted, selfhood, seeth, rainbow, lexical, haloing, butterflies,terracotta, fountaining, unhoused, stripteasing, cramful, washpan, limekiln, imprisoned, sphered, gingham, incestuous, flax, circulation, teapots, jugular, viperish, bulldog, fingertips, hubcaps, cowlick, waterbed, maxed, chaliced, textual, dreamshovels, splint, highpoints, pulsebeat, foamline, ISP, USB"
 RESERVOIR=[w for w in prelim_weird_seed.split(",")]
 
 # single word poem list
@@ -139,7 +149,7 @@ SMALL_POEM=""
 #   READ DIRECTORY    #
 #                                                 #
 #################################################
-def extractFeaturesAndWriteBio(READ_PATH,file_type):
+def extractFeaturesAndWritePoem(READ_PATH,file_type):
     
     
 
@@ -155,12 +165,15 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
     for subdir, dirs, files in os.walk(READ_PATH):
         for file in files:
 
-            random.shuffle(files)
+            if type_of_run == "ALL":
+                random.shuffle(files)
             
             num_of_files = len(files)-1 # deduct the DS_store
             #print (num_of_files,'readDirectory',READ_PATH)
             
             if file_type in file  and 'readme' not in file:
+
+                JSON_alchemy_loaded = False
 
                 # ID
                 id=file.split(".")[0]
@@ -183,7 +196,7 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                     if int(inp) != 0:
                         end_time = time.time()
                         es = end_time-start_time
-                        print sub_cnt, "poems\n",lines_total,"lines\n",words_total,"words\ngenerated in\n",("%.2f" % es),"seconds"
+                        print sub_cnt, "poems,\n",lines_total,"lines,\n",words_total,"words \ngenerated in\n",("%.2f" % es),"seconds"
                         
                     words_total=0
                     lines_total=0
@@ -196,21 +209,19 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                     if not inp:
                         print "You entered nothing! 10 poems will be generated."
                         inp=10
-
-                    sleep_time = raw_input("\nSleep duration?")
-                    if not sleep_time:
-                        print "You entered no time! 10 second wait assigned."
-                        sleep_time=10
-
-                    pause_every = raw_input("\nPause every 1 or 2 or ...?")
+                        
+                    pause_every = raw_input("\nPause every 1 or 2 or ... poems?")
                     if not pause_every:
                         print "You entered nothing! Pause will occur every 10 poems."
                         pause_every=10
 
+                    sleep_time = raw_input("\nPause for how many seconds?")
+                    if not sleep_time:
+                        print "You entered no time! 10 second wait assigned."
+                        sleep_time=10
 
-                    print "\n^^^^^^^^^^^^^^^"
+                    print "\n\n^^^^^^^^^^^^^^^"
                     start_time = time.time()
-
 
                 print 'Poem #',sub_cnt
 
@@ -234,7 +245,7 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                 SKIP_bool=False
 
                 ##########################
-                # Load  POEM TEXT FILE     #
+                # Load  POEM TEXT FILE   #
                 ##########################
 
                 ##
@@ -266,8 +277,8 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                     #print poem_replaced
 
                     ###############################
-                    # REPLACE AUTHOR NAME in poem
-                    ##############################
+                    # REPLACE AUTHOR NAME in poem #
+                    ###############################
                     author_ln=author.split(" ")[-1].lstrip()
                     author_fn=author.split(" ")[:-1]
                     author = " ".join(n for n in author_fn)+author_ln
@@ -275,13 +286,13 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                     #poem_replaced = poem_replaced.replace(author_ln,"Jhave")
 
                     #######################
-                    # replace BOOK TITLES
+                    # replace BOOK TITLES #
                     #######################
                     #print "TITLES"]
                     new_title = getNewTitle("title").encode('utf-8')
 
                     #######################
-                    # fake AUTHOR
+                    # fake AUTHOR         #
                     #######################
                     
                     new_author= " ".join(random.choice(authors).split(" ")[1:-2])+" "+random.choice(authors).split(" ")[-2]
@@ -306,10 +317,12 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
 
                     if response != "failed":
 
+                        JSON_alchemy_loaded = True
+
                         if response.get('entities') is not None:
                             for idx,entity in enumerate(response['entities']):
 
-                                #print idx
+                                #DATA clean the original words (redundant duplicate but for some reason it works... and is necessary... a kludge of crowbars and bleach)
                                 ce = entity['text'].replace("0xc2"," ")
                                 ce = ce.replace("0xe2","'")
                                 ce = re.sub('(' + '|'.join(import_utilities.chars.keys()) + ')', import_utilities.replace_chars, ce)
@@ -322,14 +335,18 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
 
                                 if content in poem_replaced:
                                                        
-                                    ################################################
-                                    # Replace similar entities from other JSON     #
-                                    ################################################
+                                    #################################################
+                                    #                                               #
+                                    # Replace similar entities from other JSON      #
+                                    # Using data from ALCHEMY API                   #
+                                    #                                               #
+                                    #################################################
                                     replacement_entity = findSimilarEntityinRandomJSON(content,entity['type'])
 
                                     cr = re.sub('(' + '|'.join(import_utilities.chars.keys()) + ')', import_utilities.replace_chars, replacement_entity)
 
                                     poem_replaced = poem_replaced.replace(content,replacement_entity)
+
                                     replaced_ls.append(replacement_entity)
                     
 
@@ -387,9 +404,6 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
 
                         similarterm=""
 
-
-
-
                         if "<br>" not in word and "&#9;" not in word and len(word)>0:
 
 
@@ -440,10 +454,11 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                                         similarterm = import_utilities.synset_creeley(word_nopunct)
                                         #print "synset", similarterm
 
-                                        if similarterm is not None and similarterm == word_nopunct and len(word_nopunct)>5:
-                                            RESERVOIR.sort(key=len)
-                                            similarterm= RESERVOIR[idx%len(RESERVOIR)]
-                                            #print idx,len(RESERVOIR),similarterm,word_nopunct,"PRE>>>>>>>>LAST CHANGE STOP: ", word, "~",similarterm
+                                        if similarterm is not None and similarterm == word_nopunct and len(word_nopunct)>4:
+                                            #RESERVOIR.sort(key=len)
+                                            poetry_mouth.sort(key=len)
+                                            similarterm= poetry_mouth[idx%len(poetry_mouth)]#RESERVOIR[idx%len(RESERVOIR)]
+                                            #print "NEW",idx,len(RESERVOIR),similarterm,word_nopunct,"PRE>>>>>>>>LAST CHANGE STOP: ", word, "~",similarterm
 
                                             
 
@@ -456,7 +471,7 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                                         similarterm = random.choice(import_utilities.exclaims)
                                     else:
 
-                                        similarterm = random.choice(RESERVOIR)
+                                        similarterm = random.choice(poetry_mouth)#RESERVOIR)
                                     #print word_nopunct," replaced by", tmp, "replaced with:",similarterm, "in:",line
 
                                 ##############
@@ -474,13 +489,11 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                                                 similarterm += w+"-"
                                     similarterm = import_utilities.strip_underscore(similarterm[:-1])
                                     #print "hyphenated:",word,"replaced by: "+similarterm
-                                        
-
 
                                 
-                                # #########################################################    
-                                # # is it a TRUNCATED VERB slang as in singin or wishin   #
-                                # #########################################################
+                                #########################################################    
+                                # is it a TRUNCATED VERB slang as in singin or wishin   #
+                                #########################################################
                                 # if similarterm == word_nopunct and len(word)>2 and 'in' in word_nopunct[-2:]:
                                 #     similarterm = import_utilities.synset_creeley(word_nopunct+'g')
                                 #     ## #print "TRUNCATED SLANG word: '"+word+"'",similarterm
@@ -540,11 +553,12 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                                         replacement_word = import_utilities.strip_underscore(replacement_word)
                                         replacement_word = import_utilities.replaceNumbers(replacement_word)
                                 else:
-                                    replacement_word = random.choice(RESERVOIR)
+                                    replacement_word = random.choice(poetry_mouth)#RESERVOIR)
 
-                                #########################
-                                # RESERVOIR_OF_WEIRDNESS  #
-                                #########################  
+                                ################################
+                                # RESERVOIR_OF_WEIRDNESS       #
+                                # create a large pool of words #
+                                ################################  
 
                                 if word_nopunct.lower() in import_utilities.impera:
                                     replacement_word=random.choice(import_utilities.impera)
@@ -574,9 +588,10 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                                         if word not in RESERVOIR and quit_language<0 and import_utilities.countPunctuation(word)<1 and len(word_nopunct)>3 and not word_nopunct.istitle(): 
                                             
                                             #print "ADDING",word,"to reservoir"
-                                            ######################################################
-                                            # ADDING ONLY SMALL WORDS & MAKING A POEM OUT OF THEM
-                                            ######################################################
+                                            #################################################
+                                            # ADDING ONLY SMALL WORDS 
+                                            # & MAKING A POEM OUT OF THEM
+                                            #################################################
                                             if len(word)<7 and len(word)>0:
                                                 small_word = word
                                                 if random.randint(0,4)==3:
@@ -588,12 +603,12 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                                                 RESERVOIR.append(word)
                                                 #SMALL_POEM_ALL.append(small_word)
                                             
-                                            replacement_word = random.choice(RESERVOIR)#rap_mouth)# RESERVOIR)
+                                            replacement_word = random.choice(poetry_mouth)#RESERVOIR)#rap_mouth)# RESERVOIR)
                                             #print word_nopunct,"replaced from reservoir with", replacement_word
                                        # print "'"+word_nopunct+"'  vs RESERVOIR  replacement_word:",replacement_word #,"    new_line:",new_line
                                 if quit_language>1 and not word_nopunct.istitle():
                                     #print quit_language, "Probably foreign language: make a word salad in english"
-                                    replacement_word = random.choice(RESERVOIR)#science_mouth)#RESERVOIR)
+                                    replacement_word = random.choice(poetry_mouth)#RESERVOIR)#science_mouth)#RESERVOIR)
                                     #print word_nopunct,"OTHER replaced from reservoir with", replacement_word
                                 
                                 ###################################################
@@ -604,23 +619,73 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
 
                                 # print idx,",", poem_ls[idx],",", word ,",",replacement_word
                                 #print word ," --- ",previous_replacement_word,replacement_word
+
+                                idx_2 =  poem_ls.index(word)
+
+                                if poem_ls[idx_2]==word and poem_ls[idx_2]==replacement_word:
+                                    print "SAME idx-2 replacement_word=",replacement_word
+                                    replacement_word=random.choice(poetry_mouth)
+                                    print "NEW ",replacement_word
+
+                                # BUG test: is potential replacement a comma or period or empty?
+                                if replacement_word.lstrip().rstrip() =="," or replacement_word.lstrip().rstrip() =="" or replacement_word.lstrip().rstrip() ==".":
+                                    print "found a comma/empty why?",replacement_word.lstrip().rstrip()
+                                    replacement_word=random.choice(poetry_mouth)
+                                    print "line633 REPLACING with ",replacement_word
+
+
+                                #print idx,idx_2,"  poem_ls[idx_2]=", poem_ls[idx_2],"  poem_ls[idx]=", poem_ls[idx]," word=", word ,"    replacement=",replacement_word
+
+                                if poem_ls[idx]==word:
+                                    poem_ls[idx]=replacement_word
+                                if poem_ls[idx_2]==word:
+                                    poem_ls[idx_2]=replacement_word
+                                poem_replaced = " ".join(poem_ls)
+
+
                                 
-                                if len(word)>3 and replacement_word.lstrip().rstrip() == word_nopunct.lstrip().rstrip():
-                                    # try alchemy?
+                                if len(word)>5 and replacement_word.lstrip().rstrip() == word_nopunct.lstrip().rstrip():
 
-                                    # a 
-                                    RESERVOIR.sort(key=len)
-                                    replacement_word = RESERVOIR[idx%len(RESERVOIR)]
-                                    #print idx,len(RESERVOIR),"LAST CHANGE STOP: ", word, "~",replacement_word
+                                    #####################################################
+                                    #  since word is same as replacement, try alchemy?  #
+                                    #####################################################
+                                    
+                                    #replacement_entity = findSimilarEntityinRandomJSON(content,entity['type'])
 
+                                    # a last ditch pseudo random select 
+                                    # TODO USE THE NLTK LISTS TO SELECT POS WORD
+                                    # RESERVOIR.sort(key=len)
+                                    # replacement_word = RESERVOIR[idx%len(RESERVOIR)]
+                                    poetry_mouth.sort(key=len)
+
+
+                                    #INSERTION
+                                    replacement_word = random.choice(poetry_mouth)#[idx%len(poetry_mouth)]
+                                    print "NEWEST ran",idx,len(poetry_mouth),"LAST CHANGE STOP: ", word, "~",replacement_word
+
+                                # check again
+                                if poem_ls[idx]==word and poem_ls[idx]==replacement_word:
+                                    print "AGAIN SAME idx replacement_word=",replacement_word
+                                    replacement_word=random.choice(poetry_mouth)
+                                    print "line663 AGAIN NEW rand pf=",replacement_word
+
+                        
+                                # REPLACE (but catch for weird chars)
                                 try:
 
                                     if poem_ls[idx]==word and "****" not in word and "." != word and "\n" not in word:
-                                        poem_ls[idx]=replacement_word#.encode('utf-8')
+
+                                        # INSERTION
+                                        poem_ls[idx]=replacement_word
+                                        print "line673 REPLACING",poem_ls[idx]," with ",replacement_word
+
+
+                                    # REASSEMBLE the poem    
                                     poem_replaced = " ".join(poem_ls)
 
                                     # store this word so that conjugation can be checked 
                                     previous_replacement_word=replacement_word
+
                                 except Exception, e:
                                     #print "PENULTIMATE SKIP_bool replace FAIL",e
                                     SKIP_bool=True
@@ -688,17 +753,16 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
 
                         HTML_poem=""
                         for line in poem_replaced.split("\n"):
+                            #print "LINE", line
                             lines_total+=1
                             HTML_poem += line+"<br>"
 
                         if len(response) >0 and len(id.split("_"))>1:
-                            # ALL_poems = ALL_poems_intro + " ".join(i for i in ALL_poems.split("</h2>.")[0:])+"<br><br>~~~~~~~~~~~~~~~~~~~~~~~~~~<br>[ A poem generated from template : <b>"+ author+"</b>, <i>"+ title +"</i> ]<br><br><b>"+new_title+"<br><br></b>"+HTML_poem
 
-                    # try:
                             ALL_poems = "<br>[ A  generated-poem based upon: <i>"+ title +"</i> by <b>"+ author+"</b>]<br><br><i>"+new_title+"</i><br> by <b>"+ new_author   +"</b><br>"+HTML_poem+ALL_poems.split("</h2>")[1].replace("  ","&nbsp")
 
                             tmp_poem= "[A generated-poem based upon: '"+ title+"' by "+ author +"]\n\n"+new_title+ "\nby "+new_author+"\n"+poem_replaced
-                            
+  
                             #####################
                             #                   #
                             #                   #
@@ -717,7 +781,9 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                             #                   #
                             #                   #
                             #####################
+
                             print "\n~~~\n"  +tmp_poem
+
                             # SLOW TYPEWRITER PRESENTATION
                             # for line in tmp_poem:
                             #    for c in line:
@@ -729,20 +795,20 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
 
                             txt_fn = id.split("_")[1]+"_POEMs.txt"
 
-                            WRITE_BIO_PATH = "../../generated/poetryFoundation/CreeleyStyle_POEMS_"+datetime.datetime.now().strftime('%Y-%m-%d_%H')+"/"
-                            if not os.path.exists(WRITE_BIO_PATH):
-                                    os.makedirs(WRITE_BIO_PATH)
+                            WRITE__PATH = "../../generated/poetryFoundation/"+poem_style+datetime.datetime.now().strftime('%Y-%m-%d_%H')+"/"
+                            if not os.path.exists(WRITE__PATH):
+                                    os.makedirs(WRITE__PATH)
 
-                            txt_fn_path = WRITE_BIO_PATH+txt_fn
+                            txt_fn_path = WRITE__PATH+txt_fn
                             f_txt=open(txt_fn_path,'w')
                             f_txt.write(tmp_poem)#.encode('utf-8'))       
                             f_txt.close();   
                             #print "\nTXT file created at:",txt_fn_path
 
-                            WRITE_BIO_PATH = "../../generated/poetryFoundation/CreeleyStyle_SMALL_POEMS"+datetime.datetime.now().strftime('%Y-%m-%d_%H')+"/"
-                            if not os.path.exists(WRITE_BIO_PATH):
-                                    os.makedirs(WRITE_BIO_PATH)
-                            txt_fn_path = WRITE_BIO_PATH+txt_fn
+                            WRITE__PATH = "../../generated/poetryFoundation/"+poem_style+"_SMALL_POEMS"+datetime.datetime.now().strftime('%Y-%m-%d_%H')+"/"
+                            if not os.path.exists(WRITE__PATH):
+                                    os.makedirs(WRITE__PATH)
+                            txt_fn_path = WRITE__PATH+txt_fn
                             f_txt=open(txt_fn_path,'w')
                             f_txt.write("[A generated-poem based upon: '"+ title+"' by "+ author +"]\n\n"+SMALL_POEM)#.encode('utf-8'))       
                             f_txt.close(); 
@@ -758,12 +824,19 @@ def extractFeaturesAndWriteBio(READ_PATH,file_type):
                             ALL_poems = ALL_poems_intro+ALL_poems.replace("  ","&nbsp")
                             ALL_poems = ALL_poems.replace("$$datetime$$",datetime.datetime.now().strftime('%Y-%m-%d at %H:%M'))
                             ALL_poems = ALL_poems.replace("$$cnt$$",str(cnt))
-                            #print "cnt",cnt
+                            ALL_poems = ALL_poems.replace("$$style$$",poem_style)
                             ALL_poems = ALL_poems.replace("$$gentime$$",str(time.time() - start_time))
 
                             # ALL POEMS
-                            txt_fn = datetime.datetime.now().strftime('%Y-%m-%d_%H')+"_poetryFoundation_generatedPOEMS_CREELEYstyle_"+type_of_run+".html"
-                            txt_fn_path = DATA_DIR+"generated/POEMS/"+txt_fn
+                            txt_fn = datetime.datetime.now().strftime('%Y-%m-%d')+"_BDP_generated_"+poem_style+"_POEMS_"+str(poem_id)+".html"
+                            
+
+                            GEN_PATH = GENERATED_DIR+type_of_run+"_html/"
+                            if not os.path.exists(GEN_PATH):
+                                    os.makedirs(GEN_PATH)
+
+                            txt_fn_path = GEN_PATH+txt_fn
+
                             f_txt=open(txt_fn_path,'w')
                             f_txt.write(ALL_poems+"</hmtl>")       
                             f_txt.close();   
@@ -903,7 +976,7 @@ def findSimilarEntityinRandomJSON(orig,typ):
 ##############################
 #    READ DIRECTORY          #
 ##############################
-extractFeaturesAndWriteBio(READ_JSON_PATH,"txt")
+extractFeaturesAndWritePoem(READ_JSON_PATH,"txt")
 
 
 
@@ -914,10 +987,12 @@ extractFeaturesAndWriteBio(READ_JSON_PATH,"txt")
 ALL_poems = ALL_poems.replace("$$datetime$$",datetime.datetime.now().strftime('%Y-%m-%d at %H:%M'))
 ALL_poems = ALL_poems.replace("$$cnt$$",str(cnt))
 ALL_poems = ALL_poems.replace("$$gentime$$",str(time.time() - start_time))
-ALL_poems = ALL_poems.replace("$$style$$",str(poem_style))
+
 ALL_poems = ALL_poems.split("</h2>")[0]+"</h2>"+ALL_poems.split("</h2>")[1].replace("  ","&nbsp")
+
 # ALL POEMS
-txt_fn = datetime.datetime.now().strftime('%Y-%m-%d_%H')+"_poetryFoundation_generatedPOEMS_"+poem_style+"_"+type_of_run+".html"
+txt_fn = datetime.datetime.now().strftime('%Y-%m-%d')+"_BDP_generated_"+poem_style+"_POEMS_"+str(poem_id)+".html"
+
 txt_fn_path = DATA_DIR+"generated/POEMS/"+txt_fn
 f_txt=open(txt_fn_path,'w')
 f_txt.write(ALL_poems+"</hmtl>")   
