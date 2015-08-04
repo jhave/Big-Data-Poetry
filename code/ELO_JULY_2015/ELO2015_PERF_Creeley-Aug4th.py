@@ -165,7 +165,7 @@ def extractFeaturesAndWritePoem(READ_PATH,file_type):
 
     for subdir, dirs, files in os.walk(READ_PATH):
 
-        print "randomizing",datetime.datetime.now()
+        #print "randomizing",datetime.datetime.now()
         random.seed(datetime.datetime.now())
         random.shuffle(files)
 
@@ -268,6 +268,7 @@ def extractFeaturesAndWritePoem(READ_PATH,file_type):
                     # txt_data.decode('ISO-8859-2') .decode('utf-8')
                     # unicode(txt_data)
 
+
                     author=txt_data.split("****!****")[0].strip(' \t\n\r')
                     
                     title=txt_data.split("****!****")[1].strip(' \t\n\r')
@@ -278,6 +279,7 @@ def extractFeaturesAndWritePoem(READ_PATH,file_type):
                     bio.replace("\t","&#9;")
                     bio.replace("\n"," <br>")
                     bio.replace("\r"," <br>")
+                    bio.replace("","~~~~!~~~")
                     poem_replaced=bio
                     #print poem_replaced
 
